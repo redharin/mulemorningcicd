@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="63049a7a-0a40-44bd-a08e-1b0f1f25b0a8" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="12f41870-6310-4c79-b57f-9f2504411168" basePath="/api" >
+		<http:request-connection host="saturday-practice.us-e2.cloudhub.io" port="80" />
+	</http:request-config>
+	<flow name="mule-morning-cicdFlow" doc:id="503797b0-070f-4952-97a5-c76d13d214d2" >
+		<http:listener doc:name="Listener" doc:id="ac0d256a-0e68-43ee-b007-72c2f2c48128" config-ref="HTTP_Listener_config" path="/getAllCustomers"/>
+		<logger level="INFO" doc:name="Logger" doc:id="447dd968-a745-4ce7-879e-b7e69334777a" message="Request Received"/>
+		<http:request method="GET" doc:name="Request" doc:id="2db9f906-6b6b-49b8-beed-8b7af519abb3" config-ref="HTTP_Request_configuration" path="/getAllCustomers"/>
+		<ee:transform doc:name="Transform Message" doc:id="f04ff978-9aa2-4bd4-a65b-27f7abd56edd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
